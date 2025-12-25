@@ -1,0 +1,2 @@
+func RetrieveWeightedItem [param variable returnValue !] [param string table_name !] [param num itemAmt 1]: ; "itemAmt" is not a typo. default value is 1
+    

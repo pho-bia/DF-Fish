@@ -1,0 +1,29 @@
+func 'event-Cast':
+    [line wait_time]
+    [line variance]
+    [line fish_time]
+
+    player_action SetNamePrefix [stxt '<gray><bold>...<reset>'] ?'Prefix'
+    
+    # Projectile -
+    entity_action SetCustomTag "bobber_owner" "%uuid"
+    
+    set_var GetItemTag wait_time $'Main Hand Item' "wait_time"
+    set_var GetItemTag variance $'Main Hand Item' "variance"
+    set_var = [num '%math(%var(wait_time)+%random(0,%var(variance)*2)-%var(variance)))']
+
+    repeat ForEach [line iter] $'Potion Effects': ?'True'
+        [line pot_type]
+        [line pot_amp]
+        [line player_potions]
+
+        set_var GetPotionType pot_type iter
+        set_var SetCase pot_type ?'lowercase'
+        set_var ReplaceString pot_type pot_type " " "_" ?'All occurrences' ?'Disable'
+        set_var GetPotionAmp pot_amp iter
+        set_var SetDictValue player_potions pot_type pot_amp
+    if_var DictHasKey player_potions "wind_charged":
+        set_var = fish_time [num '%math(%var(fish_time)-%math(10*%entry(player_potions,wind_charged)))']
+    
+    # Projectile -
+    entity_action SetFishingTime fish_time

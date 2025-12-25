@@ -1,0 +1,2 @@
+func 'event-Miss':
+    player_action SetNamePrefix [stxt '<gray><bold>._.<reset>']

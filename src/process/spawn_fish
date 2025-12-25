@@ -1,0 +1,14 @@
+[local event_item]
+
+process 'spawn_fish':
+    game_action SpawnItem event_item [g_val Location 'Projectile'] ?'True'
+    # LastEntity
+    entity_action SetPickupDelay 0
+    entity_action SetCustomTag "dropped_item_owner" $'UUID'
+    entity_action SetCustomTag "item_catcher" $'UUID'
+    
+    call_func checkItemOverflow
+    set_var VectorBetween [line vector] [g_val Location 'Last-Spawned Entity'] $'Midpoint Location'
+    set_var MultiplyVector vector 0.25
+    entity_action SetVelocity vector
+    select_obj reset

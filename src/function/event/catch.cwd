@@ -1,0 +1,39 @@
+[game rarity_basic_table 'lootRarity/basic'] ; Hard coded
+[save player_data 'player_%uuid']
+
+func 'event-Catch':
+    [local index]
+    
+    # Victim -
+    entity_action Remove
+
+    player_action SetNamePrefix [stxt '<gray><bold>🐠<reset>'] ?'Prefix'
+    set_var SetDictValue player_data "catches" [num '%math(%entry(player_%uuid,catches)+1)']
+    
+    call_func RetrieveWeightedItem index "tier_rarity_0" 1
+
+    if_var ItemHasTag $'Main Hand Item' "rod" "gambler_rod":
+        if_var = [num '%random(1,100)'] 1:
+            [line list_length]
+            set_var += index 1
+            set_var ListLength list_length rarity_basic_table
+            set_var ClampNumber index index 1 list_length
+            player_action SendMessage [stxt '<yellow><bold>!!!<newline>You sense your luck increase...'] ?'True' ?'Add spaces' ?'Regular'
+    
+    [local weight]
+    [local cost]
+    [local item]
+    call_func 'data-RetrieveRandomNum' weight "%index(lootWeight/basic,%var(index))"
+    call_func 'data-RetrieveRandomNum' cost "%index(lootCost/basic,%var(index))"
+    call_func 'RetrieveWeightedItem' item "warm/fish_table_1" 1
+
+    if_var ItemHasTag $'Main Hand Item' "rod" "hat_rod":
+        set_var SetItemTag item "fish" "fish_with_cool_cloth"
+    
+    if_var ItemHasTag item "fish" "fish_with_cool_cloth":
+        call_func 'CoolFishDye' item item
+    
+    [local event_item]
+
+    call_func 'reCreateFishItem' event_item item "%index(lootRarity/basic,%var(index))" weight cost
+    start_process 'spawn_fish' ?'Copy' ?'With current targets'

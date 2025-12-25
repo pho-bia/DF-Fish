@@ -1,0 +1,4 @@
+event Fish:
+    game_action SetEventXP 0
+    set_var = [local fish_event_cause] $'Fish Event Cause'
+    call_func 'event-%var(fish_event_cause)'
