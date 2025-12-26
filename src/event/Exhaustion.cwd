@@ -1,0 +1,2 @@
+event Exhaustion:
+    game_action Cancel

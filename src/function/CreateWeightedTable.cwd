@@ -1,0 +1,11 @@
+func 'CreateWeightedTable' [param variable LootTableVar note:'Created loot table' !] [param list MasterSet &] ?'False':
+    [line list_values]
+    [line list_weights]
+    set_var FlattenList MasterSet
+    set_var ListLength [line length] MasterSet
+    repeat Multiple [line iter] [num '%math(%var(length)/2)']:
+        set_var GetListValue [line value] MasterSet [num '%math(%var(iter)*2)']
+        set_var GetListValue [line weight] MasterSet [num '%math(%math(%var(iter)*2)+1)']
+        set_var AppendValue list_values value
+        set_var AppendValue list_weights weights
+    set_var = LootTableVar list_values list_weights

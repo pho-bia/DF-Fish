@@ -1,0 +1,45 @@
+event Command:
+    set_var = [local cmd_args] $'Event Command Arguments'
+
+    if_game CommandEquals "bugitem" ?'True' ?'Check entire command':
+        call_func 'cmd-bugreport'
+    
+    if_game CommandEquals "sell" ?'True' ?'Check beginning':
+        NOT if_var ItemHasTag $'Main Hand Item' "innerseller":
+            call_func 'cmd-FinishFish'
+        else:
+            call_func 'cmd-FinishBundle'
+    
+    if_game CommandEquals "flex" ?'True' ?'Check beginning':
+        call_func 'cmd-Flex' [local return_name] $'Main Hand Item' "gold" "bold"
+        # AllPlayers -
+        player_action SendMessages [stxt '<bold><aqua>%default<white> is flexing a<space>'] return_name [stxt '<gold><bold>!'] ?'False' ?'No spaces' ?'Regular'
+    
+    if_game CommandEquals "help" ?'True' ?'Check beginning':
+        [stxt newline '<newline>']
+        [stxt help_pt1 '<gray>—————— [<yellow> Commands <gray>]']
+        [stxt help_pt2 '<insert:@help><hover:show_text:'<gray>Input command @help (shift+click)'><#008f8f>▷— <white>@help<#008f8f> | <gray>Send this message!</hover>']
+        [stxt help_pt3 '<insert:@flex><hover:show_text:'<gray>Input command @flex (shift+click)'><#008f8f>▷— <white>@flex<#008f8f> | <gray>Show off your fish!</hover>']
+        [stxt help_pt4 '<insert:@sell><hover:show_text:'<gray>Input command @sell (shift+click)'><#008f8f>▷— <white>@sell<#008f8f> | <gray>Sell the fish in your main hand!</hover>']
+        [stxt help_pt5 '<insert:@bugitem><hover:show_text:'<gray>Input command @bugitem (shift+click)'><#008f8f>▷— <white>@bugitem<#008f8f> | <gray>Submit an item for bug reporting! (Deletes item)</hover>']
+        [stxt help_pt6 '<gray>Press <key:key.swapOffhand> to sit!']
+        player_action SendMessage help_pt1 newline help_pt2 newline help_pt3 newline help_pt4 newline help_pt5 newline help_pt6 ?'True' ?'No spaces' ?'Regular'
+    
+    NOT if_player HasPermission ?'Developer':
+        control End
+
+    if_game CommandEquals "delitems" ?'True' ?'Check entire command':
+        [snd countsound 'Didgeridoo' pitch:0.25 vol:1]
+        # AllPlayers
+        player_action SendTitle "DELETING ITEMS IN 3 SECONDS" 40 20 20
+        player_action PlaySoundSeq countsound countsound countsound [snd 'Item Break' pitch:1 vol:2]
+        # Default
+        control Wait 3 ?'Seconds'
+        select_obj EntitiesCond IsItem
+        # Selection -
+        entity_action Remove
+
+    if_game CommandEquals "set" ?'True' ?'Check beginning':
+        call_func 'cmd-set'
+    if_game CommandEquals "bugitem check" ?'True' ?'Check entire command':
+        call_func 'cmd-ShowBugItem'

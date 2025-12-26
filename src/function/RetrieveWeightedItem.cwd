@@ -1,2 +1,27 @@
-func RetrieveWeightedItem [param variable returnValue !] [param string table_name !] [param num itemAmt 1]: ; "itemAmt" is not a typo. default value is 1
+[game selected_table 'lootTable/%var(table_name)']
+
+func RetrieveWeightedItem [param variable returnValue !] [param string table_name !] [param num itemAmt val:1]:
+    set_var GetListValue [line weights] selected_table 1
+    set_var GetListValue [line values] selected_table 2
     
+    set_var + [line total_weight] weights
+    set_var += total_weight
+    set_var ListLength [line list_length] values
+
+
+    repeat Multiple itemAmt:
+        set_var = [line weight_progress] 1
+        set_var = [line randomNum] [num '%random(1,1000000)'] ; 1_000_000
+        call_func 'RandomNumber' randomNum 1 total_weight
+
+        repeat Multiple [line iter] list_length:
+            set_var GetListValue [line iter_weight] weights iter
+            set_var += weight_progress iter_weight
+            
+            if_var >= weight_progress randomNum:
+                set_var GetListValue [line list_val] values iter
+                set_var AppendValue returnValue list_val
+                control StopRepeat
+    
+    if_var ListSizeEquals returnValue 1:
+        set_var GetListValue returnValue returnValue 1

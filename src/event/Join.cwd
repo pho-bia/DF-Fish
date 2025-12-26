@@ -1,0 +1,21 @@
+[game GAME_VERSION 'GAME-versionString']
+
+event Join:
+    player_action SetChatTag [stxt '<#0f8fff>-🎣-<space>']
+    player_action GivePotion [pot 0 1] ?'False' ?'False' ?'None'
+    player_action SetReachAttribute 0 ?'Block interaction range' ?'Direct'
+    # AllPlayers -
+    player_action SendMessage [stxt '<gray>[<green>+<gray>]<reset> %default']
+
+    set_var = game_version "a005"
+    
+    player_action LoadInv ?'Synchronous'
+    player_action SendMessage [stxt '<yellow><bold>Warning!!!<reset>'] ?'False' ?'No spaces' ?'Centered'
+    player_action SendMessage "Alpha plot!!! Your progress will not be saved. This is a proof of concept for catching silly fish." ?'True' ?'Add spaces' ?'Centered'
+    
+    player_action SetNamePrefix [stxt '<gray><bold>🎣<reset>'] ?'Prefix'
+    player_action SetStatus [stxt '<gray><bold>Gone Fishin\'']
+
+    call_func 'event-OnStart'
+    call_func 'event-PlayerNew'
+    start_process 'loop-PlayerProcess' ?'Don\'t copy' ?'With current targets'

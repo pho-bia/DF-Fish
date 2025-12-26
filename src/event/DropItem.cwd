@@ -1,0 +1,11 @@
+event DropItem:
+    # Victim -
+    entity_action SetCustomTag "dropped_item_owner" "%uuid"
+
+    if_var ItemHasTag $'Event Item' "drop/sound":
+        set_var GetItemTag [line input] $'Event Item' "drop/sound"
+        call_func 'cmd-ItemSounds' input "%uuid"
+    if_var ItemHasTag $'Event Item' "break_on_drop":
+        # Victim -
+        entity_action Remove
+    call_func 'checkItemOverflow' "%uuid"
